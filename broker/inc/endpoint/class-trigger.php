@@ -5,7 +5,7 @@ namespace AuthBroker\Endpoint;
 use WP_REST_OAuth1_Client;
 
 class Trigger extends Base {
-	protected function run( $params ) {
+	public function run( $params ) {
 		$this->key = $params['verifier'];
 
 		$this->log_event( 'Starting verification' );
