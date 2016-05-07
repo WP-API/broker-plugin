@@ -34,7 +34,7 @@ class Trigger extends Base {
 		$response = wp_remote_post( $data['server_url'], array(
 			'body' => array(
 				'broker'             => 'http://broker.local/',
-				'verifier'           => $key,
+				'verifier'           => $this->key,
 				'client_id'          => $data['client_id'],
 				'client_name'        => $client->post_title,
 				'client_description' => $client->post_content,
