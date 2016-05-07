@@ -41,11 +41,11 @@ function dispatch() {
 
 	switch ( $wp->query_vars[ QUERY_VAR ] ) {
 		case 'connect':
-			$endpoint = new Connect_Endpoint();
+			$endpoint = new Endpoint\Connect();
 			break;
 
 		case 'trigger_verification':
-			$endpoint = new Trigger_Endpoint();
+			$endpoint = new Endpoint\Trigger();
 			break;
 
 		case 'confirm':
