@@ -6,6 +6,14 @@ use WP_REST_OAuth1_Client;
 
 class Trigger extends Base {
 	public function run( $params ) {
+		if ( empty( $params['verifier'] ) ) {
+			$this->key = 'Unknown';
+			$this->log_event( 'Missing verifier' );
+			echo 'Missing verifier parameter.';
+
+			return;
+		}
+
 		$this->key = $params['verifier'];
 
 		$this->log_event( 'Starting verification' );
