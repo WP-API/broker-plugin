@@ -61,7 +61,7 @@ class Connect extends Base {
 
 		// Authentication succeeded, issue partial response.
 		$this->key = wp_generate_password( 8, false, false );
-		$this->emit_ndjson_response( [ 'status' => 'processing', 'key' => $token ] );
+		$this->emit_ndjson_response( [ 'status' => 'processing', 'key' => $this->key ] );
 		$this->log_event( 'Processing' );
 
 		// Step 2: Run autodiscovery
@@ -79,7 +79,7 @@ class Connect extends Base {
 
 		wp_remote_post( home_url( '/broker/trigger_verification/' ), array(
 			'body' => array(
-				'verifier' => $token,
+				'verifier' => $this->key,
 			),
 			'blocking' => false,
 		));
