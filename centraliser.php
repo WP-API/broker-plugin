@@ -132,28 +132,36 @@ class WP_REST_AuthBroker {
 	}
 
 	public function issue_and_verify() {
-		/** @var WP_REST_OAuth1 */
-		$oauth = $GLOBALS['wp_json_authentication_oauth1'];
+		// Does one already exist?
+		$posts = get_posts( array(
+			'post_type' => 'json_consumer',
+			'post_status' => 'any',
+			'meta_query' => array(
+				array(
+					'key' => 'type',
+					'value' => 'oauth1',
+				),
+				array(
+					'key' => 'broker_client_id',
+					'value' => $this->data['client'],
+				),
+			),
+		));
+		if ( ! empty( $posts ) ) {
+			$existing = $posts[0];
+
+			$this->send_details_to_broker( $existing->key, $existing->secret );
+			return;
+		}
 
 		// Generate a unique key and secret
 		do {
-			$key = wp_generate_password( self::CONSUMER_KEY_LENGTH, false );
-			$secret = wp_generate_password( self::CONSUMER_SECRET_LENGTH, false );
-		} while ( ! is_wp_error( $oauth->get_by_key( $key ) ) );
+			$key = wp_generate_password( WP_REST_OAuth1_Client::CONSUMER_KEY_LENGTH, false );
+			$secret = wp_generate_password( WP_REST_OAuth1_Client::CONSUMER_SECRET_LENGTH, false );
+		} while ( ! is_wp_error( WP_REST_OAuth1_Client::get_by_key( $key ) ) );
 
-		$params = array(
-			'verifier'      => $this->data['verifier'],
-			'client_id'     => $this->data['client_id'],
-			'client_token'  => $key,
-			'client_secret' => $secret,
-		);
-		$url = $this->data['broker_url'];
-		$options = array(
-			'body' => build_query( $params ),
-		);
-
-		$response = wp_remote_post( $url, $options );
-		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+		$response = $this->send_details_to_broker( $key, $secret );
+		if ( ! $response ) {
 			// Could not verify, quit.
 			return;
 		}
@@ -165,9 +173,31 @@ class WP_REST_AuthBroker {
 			'name'        => $this->data['client_name'] ? $this->data['client_name'] : 'Unknown',
 			'description' => $this->data['client_description'] ? $this->data['client_description'] : 'Unknown',
 			'meta'        => array(
+				'broker_client_id' => $this->data['client'],
 				'broker_detail_url' => $this->data['client_details'],
 			),
 		);
 		$client = WP_REST_OAuth1_Client::create( $client_params );
+	}
+
+	protected function send_details_to_broker( $key, $secret ) {
+		$params = array(
+			'verifier'      => $this->data['verifier'],
+			'client_id'     => $this->data['client'],
+			'client_token'  => $key,
+			'client_secret' => $secret,
+		);
+
+		$url = $this->data['broker_url'];
+		$options = array(
+			'body' => build_query( $params ),
+		);
+
+		$response = wp_remote_post( $url, $options );
+		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+			return false;
+		}
+
+		return true;
 	}
 }
