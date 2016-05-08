@@ -83,7 +83,7 @@ class WP_REST_AuthBroker {
 			$data = array( 'status' => WP_Http::BAD_REQUEST );
 			return new WP_Error( 'ba.invalid_client_id', __( 'Invalid client ID.', 'rest_broker' ), $data );
 		}
-		if ( strlen( $verifier ) < 1 || strlen( $verifier ) > 255 || preg_match( '/[a-zA-Z0-9]/', $verifier ) !== 0 ) {
+		if ( strlen( $verifier ) < 1 || strlen( $verifier ) > 255 || preg_match( '/[^a-zA-Z0-9]/', $verifier ) !== 0 ) {
 			$data = array( 'status' => WP_Http::BAD_REQUEST );
 			return new WP_Error( 'ba.invalid_verifier', __( 'Invalid verifier code.', 'rest_broker' ), $data );
 		}
