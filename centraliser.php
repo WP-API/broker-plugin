@@ -77,6 +77,7 @@ class WP_REST_AuthBroker {
 		$broker = $request['broker'];
 		$client = $request['client_id'];
 		$verifier = $request['verifier'];
+		$callback = $request['callback_url'];
 
 		// TODO: move to arg validation
 		if ( strlen( $client ) < 1 || strlen( $client ) > 255 ) {
@@ -86,6 +87,10 @@ class WP_REST_AuthBroker {
 		if ( strlen( $verifier ) < 1 || strlen( $verifier ) > 255 || preg_match( '/[^a-zA-Z0-9]/', $verifier ) !== 0 ) {
 			$data = array( 'status' => WP_Http::BAD_REQUEST );
 			return new WP_Error( 'ba.invalid_verifier', __( 'Invalid verifier code.', 'rest_broker' ), $data );
+		}
+		if ( strlen( $callback ) < 1 || ! WP_REST_OAuth1::validate_callback( $callback ) ) {
+			$data = array( 'status' => WP_Http::BAD_REQUEST, 'callback' => $callback );
+			return new WP_Error( 'ba.invalid_callback', __( 'Invalid callback URL.', 'rest_broker' ), $data );
 		}
 
 		// Step 1: Check the broker is known
@@ -112,6 +117,7 @@ class WP_REST_AuthBroker {
 		$this->data = array(
 			'client'     => $client,
 			'verifier'   => $verifier,
+			'callback'   => $callback,
 			'broker'     => $broker,
 			'broker_url' => $known[ $broker ],
 		);
@@ -173,6 +179,7 @@ class WP_REST_AuthBroker {
 			'name'        => $this->data['client_name'] ? $this->data['client_name'] : 'Unknown',
 			'description' => $this->data['client_description'] ? $this->data['client_description'] : 'Unknown',
 			'meta'        => array(
+				'callback' => $this->data['callback'],
 				'broker_client_id' => $this->data['client'],
 				'broker_detail_url' => $this->data['client_details'],
 			),
