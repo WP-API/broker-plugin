@@ -180,6 +180,7 @@ class WP_REST_AuthBroker {
 			'description' => $this->data['client_description'] ? $this->data['client_description'] : 'Unknown',
 			'meta'        => array(
 				'callback' => $this->data['callback'],
+				'broker_id' => $this->data['broker'],
 				'broker_client_id' => $this->data['client'],
 				'broker_detail_url' => $this->data['client_details'],
 			),
