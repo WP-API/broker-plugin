@@ -2,6 +2,7 @@
 
 namespace AuthBroker\Endpoint;
 
+use WordPress\Discovery;
 use WP_Error;
 use WP_REST_OAuth1_Client;
 
@@ -70,9 +71,19 @@ class Connect extends Base {
 		$this->log_event( 'Processing' );
 
 		// Step 2: Run autodiscovery
-		$url = $params['server_url'];
-		// TODO: yolo
-		$url .= 'wp-json/broker/v1/connect';
+		$site = Discovery\discover( $params['server_url'] );
+		if ( empty( $site ) ) {
+			// TODO: error
+			echo 'Could not discover API';
+			return;
+		}
+		if ( ! $site->supportsAuthentication( 'broker' ) ) {
+			echo 'Site does not support broker authentication.';
+			return;
+		}
+
+		// Get the broker connection endpoint from the index
+		$url = $site->getAuthenticationData( 'broker' );
 
 		// Step 3: Trigger non-blocking request to Server
 		$this->set_state( 'connect' );

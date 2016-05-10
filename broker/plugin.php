@@ -10,6 +10,9 @@ use WP_Error;
 
 const QUERY_VAR = 'auth_broker';
 
+require __DIR__ . '/autodiscovery/namespace.php';
+require __DIR__ . '/autodiscovery/Site.php';
+
 add_action( 'init', __NAMESPACE__ . '\\register_rewrites' );
 add_action( 'template_redirect', __NAMESPACE__ . '\\dispatch', -200 );
 
