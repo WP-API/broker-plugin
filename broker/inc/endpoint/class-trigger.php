@@ -36,6 +36,7 @@ class Trigger extends Base {
 				'broker'             => 'http://broker.local/',
 				'verifier'           => $this->key,
 				'client_id'          => $data['client_id'],
+				'callback_url'       => $client->callback,
 				'client_name'        => $client->post_title,
 				'client_description' => $client->post_content,
 			),
