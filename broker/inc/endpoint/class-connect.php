@@ -115,6 +115,7 @@ class Connect extends Base {
 		$this->emit_response([
 			'client_token'  => $value['client_token'],
 			'client_secret' => $value['client_secret'],
+			'api_root'      => $site->getIndexURL(),
 		]);
 	}
 
