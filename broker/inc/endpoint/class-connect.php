@@ -61,7 +61,6 @@ class Connect extends Base {
 
 		// Authentication succeeded, issue partial response.
 		$this->key = wp_generate_password( 8, false, false );
-		$this->emit_ndjson_response( [ 'status' => 'processing', 'key' => $this->key ] );
 		$this->log_event( 'Processing' );
 
 		// Step 2: Run autodiscovery
@@ -88,7 +87,7 @@ class Connect extends Base {
 		$value = $this->await_response();
 
 		if ( is_wp_error( $value ) ) {
-			$this->emit_ndjson_response([
+			$this->emit_response([
 				'status' => 'error',
 				'type'   => $value->get_error_code(),
 			]);
@@ -96,7 +95,7 @@ class Connect extends Base {
 		}
 
 		// Step 5: Complete.
-		$this->emit_ndjson_response([
+		$this->emit_response([
 			'client_token'  => $value['client_token'],
 			'client_secret' => $value['client_secret'],
 		]);

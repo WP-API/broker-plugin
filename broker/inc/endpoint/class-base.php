@@ -3,11 +3,10 @@
 namespace AuthBroker\Endpoint;
 
 abstract class Base {
-	protected function emit_ndjson_response( $data ) {
+	protected function emit_response( $data ) {
 		flush();
 
-		$line = json_encode( $data );
-		echo $line . "\n";
+		echo json_encode( $data );
 		flush();
 	}
 
