@@ -59,7 +59,13 @@ class Connect extends Base {
 			return;
 		}
 
-		// Authentication succeeded, issue partial response.
+		// Authentication succeeded, send headers.
+		header('Content-Type: application/json');
+		if ( ob_get_level() > 0 ) {
+			ob_end_flush();
+		}
+		flush();
+
 		$this->key = wp_generate_password( 8, false, false );
 		$this->log_event( 'Processing' );
 
