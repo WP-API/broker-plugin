@@ -111,7 +111,7 @@ class Connect extends Base {
 			$elapsed = microtime( true ) - $timestart;
 			if ( $elapsed > $timeout ) {
 				// Time to bail.
-				return new WP_Error( 'broker.connect.timeout' );
+				return new WP_Error( 'ba.timed_out', 'The Broker did not receive a response from the Server.', array( 'status' => 406 ) );
 			}
 
 			$value = $this->get_uncached_state();
