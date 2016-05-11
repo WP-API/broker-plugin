@@ -47,7 +47,7 @@ class WP_REST_AuthBroker {
 
 	public function get_known_brokers() {
 		$brokers = array(
-			'https://w.org/' => 'https://api.wordpress.org/broker/1.0/verify',
+			'https://apps.wp-api.org/' => 'https://apps.wp-api.org/broker/confirm/',
 		);
 
 		/**
