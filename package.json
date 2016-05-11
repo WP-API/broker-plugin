@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "parse-link-header": "^0.4.1",
-    "request": "^2.69.0"
-  }
-}
