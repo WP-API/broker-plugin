@@ -1,7 +1,7 @@
 <pre class="metadata">
 Title: Brokered Authentication
 Status: ED
-ED: http://example.com/
+ED: https://apps.wp-api.org/spec/
 Shortname: wp-broker
 Level: 1
 Editor: Ryan McCue, Human Made, https://rmccue.io/
