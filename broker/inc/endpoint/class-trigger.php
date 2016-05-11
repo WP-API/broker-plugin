@@ -2,6 +2,7 @@
 
 namespace AuthBroker\Endpoint;
 
+use AuthBroker;
 use WP_REST_OAuth1_Client;
 
 class Trigger extends Base {
@@ -33,7 +34,7 @@ class Trigger extends Base {
 		$this->log_event( 'Sending request: ' . $data['server_url'] );
 		$response = wp_remote_post( $data['server_url'], array(
 			'body' => array(
-				'broker'             => 'http://broker.local/',
+				'broker'             => AuthBroker\get_broker_id(),
 				'verifier'           => $this->key,
 				'client_id'          => $data['client_id'],
 				'callback_url'       => $client->callback,

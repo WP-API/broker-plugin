@@ -27,6 +27,23 @@ function register_rewrites() {
 }
 
 /**
+ * Get the broker ID (URI).
+ *
+ * @return string Broker ID URI.
+ */
+function get_broker_id() {
+	/**
+	 * Filter the broker ID.
+	 *
+	 * Broker ID as a URI. This looks like `https://api.w.org/`. This is only
+	 * an ID, and does not have to be an accessible URL.
+	 *
+	 * @param string $id Broker ID. Defaults to home URL.
+	 */
+	return apply_filters( 'authbroker.id', home_url() );
+}
+
+/**
  * Dispatch a broker endpoint request to the endpoint.
  */
 function dispatch() {
