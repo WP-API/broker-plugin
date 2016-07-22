@@ -106,7 +106,7 @@ The Broker then requests the credentials by a HTTP "POST" request to the Connect
 * <code>verifier</code>: The verification token.
 * <code>callback_url</code>: The OAuth callback URL.
 
-The <code>client_id</code> MUST NOT be a string containing between one and 255 characters.
+The <code>client_id</code> MUST be a string containing between one and 255 characters.
 
 The <code>broker</code> parameter MUST be a URI which uniquely identifies the Broker. The Server SHOULD match the Broker identifier against a list of known Brokers and reject the request if the Broker is unknown.
 
