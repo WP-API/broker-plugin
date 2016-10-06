@@ -1,46 +1,4 @@
 <?php
-/**
- * Plugin Name: WP REST API Authentication Broker
- * Description: Allow bootstrapping site authentication via a central registry.
- */
-
-add_action( 'rest_api_init', 'rest_broker_register_routes' );
-
-function rest_broker_register_routes() {
-	if ( empty( $GLOBALS['wp_json_authentication_oauth1'] ) ) {
-		// OAuth must be enabled for the broker to actually do anything
-		return;
-	}
-
-	$broker = new WP_REST_AuthBroker();
-
-	register_rest_route( 'broker/v1', '/connect', array(
-		array(
-			'methods' => 'GET',
-			'callback' => array( $broker, 'get_connect_information' ),
-		),
-		array(
-			'methods' => 'POST',
-			'callback' => array( $broker, 'handle_connect' ),
-			'args' => array(
-				'client_id' => array(
-					'required' => true,
-				),
-				'broker' => array(
-					'required' => true,
-				),
-				'verifier' => array(
-					'required' => true,
-				),
-				'client_name' => array(),
-				'client_description' => array(),
-				'client_details' => array(),
-			),
-		),
-	));
-
-	add_action( 'rest_index', array( $broker, 'add_index_link' ) );
-}
 
 class WP_REST_AuthBroker {
 	protected $data;
@@ -68,8 +26,8 @@ class WP_REST_AuthBroker {
 
 	public function get_connect_information( WP_REST_Request $request ) {
 		$response = new WP_REST_Response();
-		$response->set_data('This endpoint is used for the Brokered Authentication protocol.');
-		$response->header('X-BA-Endpoint', 'connection-request');
+		$response->set_data( 'This endpoint is used for the Brokered Authentication protocol.' );
+		$response->header( 'X-BA-Endpoint', 'connection-request' );
 		return $response;
 	}
 
@@ -174,11 +132,11 @@ class WP_REST_AuthBroker {
 
 		// Verified, time to create the client.
 		$client_params = array(
-			'key'         => $key,
-			'secret'      => $secret,
 			'name'        => $this->data['client_name'] ? $this->data['client_name'] : 'Unknown',
 			'description' => $this->data['client_description'] ? $this->data['client_description'] : 'Unknown',
 			'meta'        => array(
+				'key'         => $key,
+				'secret'      => $secret,
 				'callback' => $this->data['callback'],
 				'broker_id' => $this->data['broker'],
 				'broker_client_id' => $this->data['client'],
