@@ -46,11 +46,7 @@ cd "$TMPDIR"
 sed -e "s/{{TAG}}/$VERSION/g" < "$PLUGINDIR/bin/readme.txt" > readme.txt
 
 # Remove special files
-rm ".gitignore"
-rm "composer.json"
-rm "book.json"
 rm -r "bin"
-rm -r "docs"
 
 # Add any new files
 svn status | grep -v "^.[ \t]*\..*" | grep "^?" | awk '{print $2}' | xargs svn add
